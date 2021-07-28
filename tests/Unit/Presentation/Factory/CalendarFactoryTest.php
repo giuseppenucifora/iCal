@@ -38,6 +38,57 @@ class CalendarFactoryTest extends TestCase
         self::assertSame($expected, (string) (new CalendarFactory())->createCalendar($calendar));
     }
 
+    public function testRenderCalendarWithName()
+    {
+        $calendar = new Calendar();
+        $calendar->setName('TEST_NAME');
+        $expected = implode(ContentLine::LINE_SEPARATOR, [
+            'BEGIN:VCALENDAR',
+            'PRODID:' . $calendar->getProductIdentifier(),
+            'VERSION:2.0',
+            'CALSCALE:GREGORIAN',
+            'X-WR-CALNAME:' . $calendar->getName(),
+            'END:VCALENDAR',
+            '',
+        ]);
+
+        self::assertSame($expected, (string) (new CalendarFactory())->createCalendar($calendar));
+    }
+
+    public function testRenderCalendarWithDescription()
+    {
+        $calendar = new Calendar();
+        $calendar->setDescription('TEST_DESCRIPTION');
+        $expected = implode(ContentLine::LINE_SEPARATOR, [
+            'BEGIN:VCALENDAR',
+            'PRODID:' . $calendar->getProductIdentifier(),
+            'VERSION:2.0',
+            'CALSCALE:GREGORIAN',
+            'X-WR-CALDESC:' . $calendar->getDescription(),
+            'END:VCALENDAR',
+            '',
+        ]);
+
+        self::assertSame($expected, (string) (new CalendarFactory())->createCalendar($calendar));
+    }
+
+    public function testRenderCalendarWithId()
+    {
+        $calendar = new Calendar();
+        $calendar->setCalId('TEST_ID');
+        $expected = implode(ContentLine::LINE_SEPARATOR, [
+            'BEGIN:VCALENDAR',
+            'PRODID:' . $calendar->getProductIdentifier(),
+            'VERSION:2.0',
+            'CALSCALE:GREGORIAN',
+            'X-WR-RELCALID:' . $calendar->getCalId(),
+            'END:VCALENDAR',
+            '',
+        ]);
+
+        self::assertSame($expected, (string) (new CalendarFactory())->createCalendar($calendar));
+    }
+
     public function testRenderWithEvents()
     {
         $currentTime = new Timestamp(
