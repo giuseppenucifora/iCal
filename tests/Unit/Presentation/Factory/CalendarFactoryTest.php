@@ -98,4 +98,17 @@ class CalendarFactoryTest extends TestCase
         ]);
     }
 
+    
+    private static function assertCalendarStatusRenderCorrectly(Calendar $calendar, array $expected)
+    {
+        $resultAsString = (string) (new CalendarFactory())->createCalendar($calendar);
+
+        $resultAsArray = explode(ContentLine::LINE_SEPARATOR, $resultAsString);
+
+        self::assertGreaterThan(5, count($resultAsArray), 'No additional content lines were produced.');
+
+        $resultAsArray = array_slice($resultAsArray, 3, -2);
+        self::assertSame($expected, $resultAsArray);
+    }
+
 }
