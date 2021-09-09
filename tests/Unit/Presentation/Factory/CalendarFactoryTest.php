@@ -80,20 +80,20 @@ class CalendarFactoryTest extends TestCase
     
     public function testStatus()
     {
-        $event = (new Event())
+        $calendar = (new Calendar())
             ->setStatus(Status::CONFIRMED());
 
-        self::assertEventRendersCorrect($event, [
+        self::assertCalendarStatusRenderCorrectly($calendar, [
             'STATUS:CONFIRMED',
         ]);
     }
 
     public function testMethod()
     {
-        $event = (new Event())
+        $calendar = (new Calendar())
             ->setMethod(Method::PUBLISH());
 
-        self::assertEventRendersCorrect($event, [
+        self::assertCalendarStatusRenderCorrectly($calendar, [
             'METHOD:PUBLISH',
         ]);
     }
