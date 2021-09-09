@@ -14,6 +14,7 @@ namespace Eluceo\iCal\Domain\Enum;
 final class Method
 {
     private static ?self $publish = null;
+    private static ?self $request = null;
     private static ?self $cancel = null;
 
     private string $method;
@@ -28,6 +29,11 @@ final class Method
     public static function PUBLISH(): self
     {
         return self::$publish = self::$publish ?? new Method('PUBLISH');
+    }
+    
+    public static function REQUEST(): self
+    {
+        return self::$request = self::$request ?? new Method('REQUEST');
     }
 
     public static function CANCELLED(): self
