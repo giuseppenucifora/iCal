@@ -15,6 +15,8 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Eluceo\iCal\Domain\Entity\Calendar;
 use Eluceo\iCal\Domain\Entity\Event;
+use Eluceo\iCal\Domain\Enum\Method;
+use Eluceo\iCal\Domain\Enum\Status;
 use Eluceo\iCal\Domain\ValueObject\Timestamp;
 use Eluceo\iCal\Domain\ValueObject\UniqueIdentifier;
 use Eluceo\iCal\Presentation\ContentLine;
@@ -74,4 +76,26 @@ class CalendarFactoryTest extends TestCase
 
         self::assertSame($expected, (string) (new CalendarFactory())->createCalendar($calendar));
     }
+
+    
+    public function testStatus()
+    {
+        $event = (new Event())
+            ->setStatus(Status::CONFIRMED());
+
+        self::assertEventRendersCorrect($event, [
+            'STATUS:CONFIRMED',
+        ]);
+    }
+
+    public function testMethod()
+    {
+        $event = (new Event())
+            ->setMethod(Method::PUBLISH());
+
+        self::assertEventRendersCorrect($event, [
+            'METHOD:PUBLISH',
+        ]);
+    }
+
 }

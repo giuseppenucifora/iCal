@@ -14,6 +14,8 @@ namespace Eluceo\iCal\Domain\Entity;
 use Eluceo\iCal\Domain\Collection\Events;
 use Eluceo\iCal\Domain\Collection\EventsArray;
 use Eluceo\iCal\Domain\Collection\EventsGenerator;
+use Eluceo\iCal\Domain\Enum\Method;
+use Eluceo\iCal\Domain\Enum\Status;
 use InvalidArgumentException;
 use Iterator;
 
@@ -22,6 +24,8 @@ class Calendar
     private string $productIdentifier = '-//eluceo/ical//2.0/EN';
 
     private Events $events;
+    private ?Status $status = null;
+    private ?Method $method = null;
 
     /**
      * @var array<TimeZone>
@@ -91,6 +95,40 @@ class Calendar
     public function addTimeZone(TimeZone $timeZone): self
     {
         $this->timeZones[] = $timeZone;
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function hasStatus(): bool
+    {
+        return $this->status !== null;
+    }
+
+    public function setStatus(?Status $status): Calendar
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getMethod(): ?Method
+    {
+        return $this->method;
+    }
+
+    public function hasMethod(): bool
+    {
+        return $this->method !== null;
+    }
+
+    public function setMethod(?Method $method): Calendar
+    {
+        $this->method = $method;
 
         return $this;
     }
