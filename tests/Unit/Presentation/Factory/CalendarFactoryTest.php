@@ -77,15 +77,22 @@ class CalendarFactoryTest extends TestCase
         self::assertSame($expected, (string) (new CalendarFactory())->createCalendar($calendar));
     }
 
-    
     public function testStatus()
     {
         $calendar = (new Calendar())
             ->setStatus(Status::CONFIRMED());
 
-        self::assertCalendarStatusRenderCorrectly($calendar, [
-            'STATUS:CONFIRMED',
-        ]);
+        $expected = implode(ContentLine::LINE_SEPARATOR, [
+                'BEGIN:VCALENDAR',
+                'STATUS:CONFIRMED',
+                'PRODID:' . $calendar->getProductIdentifier(),
+                'VERSION:2.0',
+                'CALSCALE:GREGORIAN',
+                'END:VCALENDAR',
+                '',
+            ]);
+
+        self::assertSame($expected, (string) (new CalendarFactory())->createCalendar($calendar));
     }
 
     public function testMethod()
@@ -93,22 +100,16 @@ class CalendarFactoryTest extends TestCase
         $calendar = (new Calendar())
             ->setMethod(Method::PUBLISH());
 
-        self::assertCalendarStatusRenderCorrectly($calendar, [
+        $expected = implode(ContentLine::LINE_SEPARATOR, [
+            'BEGIN:VCALENDAR',
             'METHOD:PUBLISH',
+            'PRODID:' . $calendar->getProductIdentifier(),
+            'VERSION:2.0',
+            'CALSCALE:GREGORIAN',
+            'END:VCALENDAR',
+            '',
         ]);
+
+        self::assertSame($expected, (string) (new CalendarFactory())->createCalendar($calendar));
     }
-
-    
-    private static function assertCalendarStatusRenderCorrectly(Calendar $calendar, array $expected)
-    {
-        $resultAsString = (string) (new CalendarFactory())->createCalendar($calendar);
-
-        $resultAsArray = explode(ContentLine::LINE_SEPARATOR, $resultAsString);
-
-        self::assertGreaterThan(5, count($resultAsArray), 'No additional content lines were produced.');
-
-        $resultAsArray = array_slice($resultAsArray, 3, -2);
-        self::assertSame($expected, $resultAsArray);
-    }
-
 }

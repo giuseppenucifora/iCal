@@ -30,7 +30,7 @@ final class Method
     {
         return self::$publish = self::$publish ?? new Method('PUBLISH');
     }
-    
+
     public static function REQUEST(): self
     {
         return self::$request = self::$request ?? new Method('REQUEST');
