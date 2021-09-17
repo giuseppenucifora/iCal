@@ -203,10 +203,11 @@ class CalendarFactoryTest extends TestCase
     public function testAltDesc()
     {
         $event = (new Event())
-            ->setAltDesc('TestAltDesc');
+            ->setAltDesc('<html><body><a href="http://bing.com">Bing</a></body></html>');
 
         self::assertEventRendersCorrect($event, [
-            'X-ALT-DESC:TestAltDesc',
+            'X-ALT-DESC;FMTTYPE=text/html:<html><body><a href="http://bing.com">Bing</a>',
+            ' </body></html>',
         ]);
     }
 

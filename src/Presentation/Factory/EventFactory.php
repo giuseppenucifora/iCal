@@ -224,6 +224,10 @@ class EventFactory
 
     private function getAltDescProperty(string $altDesc): Property
     {
-        return new Property('X-ALT-DESC', new TextValue($altDesc));
+        return new Property(
+            'X-ALT-DESC',
+            new TextValue($altDesc),
+            [new Parameter('FMTTYPE', new TextValue('text/html'))]
+    );
     }
 }
