@@ -200,6 +200,16 @@ class CalendarFactoryTest extends TestCase
         ]);
     }
 
+    public function testAltDesc()
+    {
+        $event = (new Event())
+            ->setAltDesc('TestAltDesc');
+
+        self::assertEventRendersCorrect($event, [
+            'X-ALT-DESC:TestAltDesc',
+        ]);
+    }
+
     private static function assertEventRendersCorrect(Event $event, array $expected)
     {
         $resultAsString = (string) (new EventFactory())->createComponent($event);

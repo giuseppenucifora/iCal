@@ -110,6 +110,10 @@ class EventFactory
             yield $this->getOrganizerProperty($event->getOrganizer());
         }
 
+        if ($event->hasAltDesc()) {
+            yield $this->getAltDescProperty($event->getAltDesc());
+        }
+
         foreach ($event->getAttachments() as $attachment) {
             yield from $this->getAttachmentProperties($attachment);
         }
@@ -216,5 +220,10 @@ class EventFactory
         }
 
         return new Property('ORGANIZER', new UriValue($organizer->getEmailAddress()->toUri()), $parameters);
+    }
+
+    private function getAltDescProperty(string $altDesc): Property
+    {
+        return new Property('X-ALT-DESC', new TextValue($altDesc));
     }
 }

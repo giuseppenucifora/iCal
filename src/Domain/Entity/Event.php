@@ -33,6 +33,8 @@ class Event
     private ?Timestamp $lastModified = null;
     private ?Status $status = null;
     private ?Method $method = null;
+    private ?string $altDesc = null;
+
     /**
      * @var array<Alarm>
      */
@@ -254,6 +256,25 @@ class Event
     public function setLastModified(?Timestamp $lastModified): self
     {
         $this->lastModified = $lastModified;
+
+        return $this;
+    }
+
+    public function hasAltDesc(): bool
+    {
+        return $this->altDesc !== null;
+    }
+
+    public function getAltDesc(): string
+    {
+        assert($this->altDesc !== null);
+
+        return $this->altDesc;
+    }
+
+    public function setAltDesc(?string $altDesc): self
+    {
+        $this->altDesc = $altDesc;
 
         return $this;
     }
