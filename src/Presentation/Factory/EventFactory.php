@@ -71,13 +71,21 @@ class EventFactory
 
     /**
      * @return Generator<Property>
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
     protected function getProperties(Event $event): Generator
     {
         yield new Property('UID', new TextValue((string) $event->getUniqueIdentifier()));
         yield new Property('DTSTAMP', new DateTimeValue($event->getTouchedAt()));
+
+        if ($event->hasStatus()) {
+            yield new Property('STATUS', new TextValue((string) $event->getStatus()));
+        }
+
+        if ($event->hasMethod()) {
+            yield new Property('METHOD', new TextValue((string) $event->getMethod()));
+        }
 
         if ($event->hasLastModified()) {
             yield new Property('LAST-MODIFIED', new DateTimeValue($event->getLastModified()));
@@ -107,6 +115,9 @@ class EventFactory
             yield $this->getOrganizerProperty($event->getOrganizer());
         }
 
+        if ($event->hasAltDesc()) {
+            yield $this->getAltDescProperty($event->getAltDesc());
+        }
         if ($event->hasAttendee()) {
             foreach ($event->getAttendee() as $attendee) {
                 yield from $this->getAttendeeProperties($attendee);
@@ -219,6 +230,15 @@ class EventFactory
         }
 
         return new Property('ORGANIZER', new UriValue($organizer->getEmailAddress()->toUri()), $parameters);
+    }
+
+    private function getAltDescProperty(string $altDesc): Property
+    {
+        return new Property(
+            'X-ALT-DESC',
+            new TextValue($altDesc),
+            [new Parameter('FMTTYPE', new TextValue('text/html'))]
+        );
     }
 
     /**

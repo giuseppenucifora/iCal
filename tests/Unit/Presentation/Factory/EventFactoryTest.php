@@ -14,6 +14,8 @@ namespace Unit\Presentation\Factory;
 use DateTimeImmutable;
 use DateTimeZone;
 use Eluceo\iCal\Domain\Entity\Event;
+use Eluceo\iCal\Domain\Enum\Method;
+use Eluceo\iCal\Domain\Enum\Status;
 use Eluceo\iCal\Domain\ValueObject\Attachment;
 use Eluceo\iCal\Domain\ValueObject\BinaryContent;
 use Eluceo\iCal\Domain\ValueObject\Date;
@@ -54,8 +56,7 @@ class CalendarFactoryTest extends TestCase
 
         $event = (new Event(new UniqueIdentifier('event1')))
             ->touch($currentTime)
-            ->setLastModified($lastModified)
-        ;
+            ->setLastModified($lastModified);
 
         $expected = implode(ContentLine::LINE_SEPARATOR, [
             'BEGIN:VEVENT',
@@ -139,7 +140,8 @@ class CalendarFactoryTest extends TestCase
             ->addAttachment(
                 new Attachment(
                     new Uri('http://example.com/document.txt'),
-                    'text/plain')
+                    'text/plain'
+                )
             );
 
         self::assertEventRendersCorrect($event, [
@@ -175,6 +177,37 @@ class CalendarFactoryTest extends TestCase
         self::assertEventRendersCorrect($event, [
             'ORGANIZER;CN=Test Display Name;DIR=example://directory-entry;SENT-BY=mailto',
             ' :sendby%40example.com:mailto:test%40example.com',
+        ]);
+    }
+
+    public function testStatus()
+    {
+        $event = (new Event())
+            ->setStatus(Status::CONFIRMED());
+
+        self::assertEventRendersCorrect($event, [
+            'STATUS:CONFIRMED',
+        ]);
+    }
+
+    public function testMethod()
+    {
+        $event = (new Event())
+            ->setMethod(Method::PUBLISH());
+
+        self::assertEventRendersCorrect($event, [
+            'METHOD:PUBLISH',
+        ]);
+    }
+
+    public function testAltDesc()
+    {
+        $event = (new Event())
+            ->setAltDesc('<html><body><a href="http://bing.com">Bing</a></body></html>');
+
+        self::assertEventRendersCorrect($event, [
+            'X-ALT-DESC;FMTTYPE=text/html:<html><body><a href="http://bing.com">Bing</a>',
+            ' </body></html>',
         ]);
     }
 

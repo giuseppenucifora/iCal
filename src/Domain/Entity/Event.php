@@ -11,6 +11,8 @@
 
 namespace Eluceo\iCal\Domain\Entity;
 
+use Eluceo\iCal\Domain\Enum\Method;
+use Eluceo\iCal\Domain\Enum\Status;
 use Eluceo\iCal\Domain\ValueObject\Alarm;
 use Eluceo\iCal\Domain\ValueObject\Attachment;
 use Eluceo\iCal\Domain\ValueObject\Attendee;
@@ -32,6 +34,9 @@ class Event
     private ?Location $location = null;
     private ?Organizer $organizer = null;
     private ?Timestamp $lastModified = null;
+    private ?Status $status = null;
+    private ?Method $method = null;
+    private ?string $altDesc = null;
 
     /**
      * @var array<Attendee>
@@ -67,6 +72,40 @@ class Event
     public function touch(?Timestamp $dateTime = null): self
     {
         $this->touchedAt = $dateTime ?? new Timestamp();
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function hasStatus(): bool
+    {
+        return $this->status !== null;
+    }
+
+    public function setStatus(?Status $status): Event
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getMethod(): ?Method
+    {
+        return $this->method;
+    }
+
+    public function hasMethod(): bool
+    {
+        return $this->method !== null;
+    }
+
+    public function setMethod(?Method $method): Event
+    {
+        $this->method = $method;
 
         return $this;
     }
@@ -251,6 +290,25 @@ class Event
     public function setLastModified(?Timestamp $lastModified): self
     {
         $this->lastModified = $lastModified;
+
+        return $this;
+    }
+
+    public function hasAltDesc(): bool
+    {
+        return $this->altDesc !== null;
+    }
+
+    public function getAltDesc(): string
+    {
+        assert($this->altDesc !== null);
+
+        return $this->altDesc;
+    }
+
+    public function setAltDesc(?string $altDesc): self
+    {
+        $this->altDesc = $altDesc;
 
         return $this;
     }

@@ -50,6 +50,13 @@ class CalendarFactory
      */
     private function getProperties(Calendar $calendar): Generator
     {
+        if ($calendar->hasMethod()) {
+            yield new Property('METHOD', new TextValue((string) $calendar->getMethod()));
+        }
+        if ($calendar->hasStatus()) {
+            yield new Property('STATUS', new TextValue((string) $calendar->getStatus()));
+        }
+
         /* @see https://www.ietf.org/rfc/rfc5545.html#section-3.7.3 */
         yield new Property('PRODID', new TextValue($calendar->getProductIdentifier()));
         /* @see https://www.ietf.org/rfc/rfc5545.html#section-3.7.4 */

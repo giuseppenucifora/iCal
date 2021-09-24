@@ -15,6 +15,8 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Eluceo\iCal\Domain\Entity\Calendar;
 use Eluceo\iCal\Domain\Entity\Event;
+use Eluceo\iCal\Domain\Enum\Method;
+use Eluceo\iCal\Domain\Enum\Status;
 use Eluceo\iCal\Domain\ValueObject\Timestamp;
 use Eluceo\iCal\Domain\ValueObject\UniqueIdentifier;
 use Eluceo\iCal\Presentation\ContentLine;
@@ -68,6 +70,42 @@ class CalendarFactoryTest extends TestCase
             'UID:event2',
             'DTSTAMP:20191110T112233Z',
             'END:VEVENT',
+            'END:VCALENDAR',
+            '',
+        ]);
+
+        self::assertSame($expected, (string) (new CalendarFactory())->createCalendar($calendar));
+    }
+
+    public function testStatus()
+    {
+        $calendar = (new Calendar())
+            ->setStatus(Status::CONFIRMED());
+
+        $expected = implode(ContentLine::LINE_SEPARATOR, [
+                'BEGIN:VCALENDAR',
+                'STATUS:CONFIRMED',
+                'PRODID:' . $calendar->getProductIdentifier(),
+                'VERSION:2.0',
+                'CALSCALE:GREGORIAN',
+                'END:VCALENDAR',
+                '',
+            ]);
+
+        self::assertSame($expected, (string) (new CalendarFactory())->createCalendar($calendar));
+    }
+
+    public function testMethod()
+    {
+        $calendar = (new Calendar())
+            ->setMethod(Method::PUBLISH());
+
+        $expected = implode(ContentLine::LINE_SEPARATOR, [
+            'BEGIN:VCALENDAR',
+            'METHOD:PUBLISH',
+            'PRODID:' . $calendar->getProductIdentifier(),
+            'VERSION:2.0',
+            'CALSCALE:GREGORIAN',
             'END:VCALENDAR',
             '',
         ]);
