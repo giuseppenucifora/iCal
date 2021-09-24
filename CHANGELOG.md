@@ -2,7 +2,7 @@
 - [x] Attendee (versione parziale)
 - [x] Status and method del calendar
 - [x] Status and method dell'event
-- [ ] Calendar id name description
+- [x] Calendar id name description
 
 ---
 
