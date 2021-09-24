@@ -1,7 +1,7 @@
 ### Modifiche integrate rispetto alla libreria di base
 - [x] Attendee (versione parziale)
 - [x] Status and method del calendar
-- [ ] Status and method dell'event
+- [x] Status and method dell'event
 - [ ] Calendar id name description
 
 ---
