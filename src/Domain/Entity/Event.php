@@ -15,6 +15,7 @@ use Eluceo\iCal\Domain\Enum\Method;
 use Eluceo\iCal\Domain\Enum\Status;
 use Eluceo\iCal\Domain\ValueObject\Alarm;
 use Eluceo\iCal\Domain\ValueObject\Attachment;
+use Eluceo\iCal\Domain\ValueObject\Attendee;
 use Eluceo\iCal\Domain\ValueObject\Location;
 use Eluceo\iCal\Domain\ValueObject\Occurrence;
 use Eluceo\iCal\Domain\ValueObject\Organizer;
@@ -36,6 +37,11 @@ class Event
     private ?Status $status = null;
     private ?Method $method = null;
     private ?string $altDesc = null;
+
+    /**
+     * @var array<Attendee>
+     */
+    private array $attendee = [];
 
     /**
      * @var array<Alarm>
@@ -305,5 +311,22 @@ class Event
         $this->altDesc = $altDesc;
 
         return $this;
+    }
+
+    public function hasAttendee(): bool {
+        return !empty($this->attendee);
+    }
+
+    public function addAttendee(Attendee $attendee): self {
+        $this->attendee[] = $attendee;
+
+        return $this;
+    }
+
+    /**
+     * @return Attendee[]
+     */
+    public function getAttendee(): array {
+        return $this->attendee;
     }
 }

@@ -16,6 +16,7 @@ use Eluceo\iCal\Domain\Collection\Events;
 use Eluceo\iCal\Domain\Entity\Event;
 use Eluceo\iCal\Domain\ValueObject\Alarm;
 use Eluceo\iCal\Domain\ValueObject\Attachment;
+use Eluceo\iCal\Domain\ValueObject\Attendee;
 use Eluceo\iCal\Domain\ValueObject\MultiDay;
 use Eluceo\iCal\Domain\ValueObject\Occurrence;
 use Eluceo\iCal\Domain\ValueObject\Organizer;
@@ -116,6 +117,11 @@ class EventFactory
 
         if ($event->hasAltDesc()) {
             yield $this->getAltDescProperty($event->getAltDesc());
+        }
+        if ($event->hasAttendee()) {
+            foreach ($event->getAttendee() as $attendee) {
+                yield from $this->getAttendeeProperties($attendee);
+            }
         }
 
         foreach ($event->getAttachments() as $attachment) {
@@ -226,12 +232,25 @@ class EventFactory
         return new Property('ORGANIZER', new UriValue($organizer->getEmailAddress()->toUri()), $parameters);
     }
 
-    private function getAltDescProperty(string $altDesc): Property
-    {
+    private function getAltDescProperty(string $altDesc): Property {
         return new Property(
             'X-ALT-DESC',
             new TextValue($altDesc),
             [new Parameter('FMTTYPE', new TextValue('text/html'))]
         );
+    }
+    
+    /**
+     *  @return Generator<Property>
+     */
+    private function getAttendeeProperties(Attendee $attendee): Generator
+    {
+        $parameters = [];
+
+        if ($attendee->hasDisplayName()) {
+            $parameters[] = new Parameter('CN', new TextValue($attendee->getDisplayName()));
+        }
+
+        yield new Property('ATTENDEE', new UriValue($attendee->getEmailAddress()->toUri()), $parameters);
     }
 }
