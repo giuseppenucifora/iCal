@@ -313,11 +313,13 @@ class Event
         return $this;
     }
 
-    public function hasAttendee(): bool {
+    public function hasAttendee(): bool
+    {
         return !empty($this->attendee);
     }
 
-    public function addAttendee(Attendee $attendee): self {
+    public function addAttendee(Attendee $attendee): self
+    {
         $this->attendee[] = $attendee;
 
         return $this;
@@ -326,7 +328,8 @@ class Event
     /**
      * @return Attendee[]
      */
-    public function getAttendee(): array {
+    public function getAttendee(): array
+    {
         return $this->attendee;
     }
 }

@@ -232,14 +232,15 @@ class EventFactory
         return new Property('ORGANIZER', new UriValue($organizer->getEmailAddress()->toUri()), $parameters);
     }
 
-    private function getAltDescProperty(string $altDesc): Property {
+    private function getAltDescProperty(string $altDesc): Property
+    {
         return new Property(
             'X-ALT-DESC',
             new TextValue($altDesc),
             [new Parameter('FMTTYPE', new TextValue('text/html'))]
         );
     }
-    
+
     /**
      *  @return Generator<Property>
      */
