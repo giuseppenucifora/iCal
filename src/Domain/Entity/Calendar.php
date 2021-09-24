@@ -23,6 +23,12 @@ class Calendar
 {
     private string $productIdentifier = '-//eluceo/ical//2.0/EN';
 
+    private string $calId = '';
+
+    private string $name = '';
+
+    private string $description = '';
+
     private Events $events;
     private ?Status $status = null;
     private ?Method $method = null;
@@ -68,6 +74,42 @@ class Calendar
     public function setProductIdentifier(string $productIdentifier): self
     {
         $this->productIdentifier = $productIdentifier;
+
+        return $this;
+    }
+
+    public function getCalId(): string
+    {
+        return $this->calId;
+    }
+
+    public function setCalId(string $calId): self
+    {
+        $this->calId = $calId;
+
+        return $this;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }
