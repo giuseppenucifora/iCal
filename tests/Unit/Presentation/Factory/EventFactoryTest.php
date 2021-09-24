@@ -34,10 +34,8 @@ use Eluceo\iCal\Presentation\ContentLine;
 use Eluceo\iCal\Presentation\Factory\EventFactory;
 use PHPUnit\Framework\TestCase;
 
-class CalendarFactoryTest extends TestCase
-{
-    public function testMinimalEvent()
-    {
+class CalendarFactoryTest extends TestCase {
+    public function testMinimalEvent() {
         $currentTime = new Timestamp(
             DateTimeImmutable::createFromFormat(
                 'Y-m-d H:i:s',
@@ -56,8 +54,7 @@ class CalendarFactoryTest extends TestCase
 
         $event = (new Event(new UniqueIdentifier('event1')))
             ->touch($currentTime)
-            ->setLastModified($lastModified)
-        ;
+            ->setLastModified($lastModified);
 
         $expected = implode(ContentLine::LINE_SEPARATOR, [
             'BEGIN:VEVENT',
@@ -71,8 +68,7 @@ class CalendarFactoryTest extends TestCase
         self::assertSame($expected, (string) (new EventFactory())->createComponent($event));
     }
 
-    public function testEventWithSummaryAndDescription()
-    {
+    public function testEventWithSummaryAndDescription() {
         $event = (new Event())
             ->setSummary('Lorem Summary')
             ->setDescription('Lorem Description');
@@ -83,8 +79,7 @@ class CalendarFactoryTest extends TestCase
         ]);
     }
 
-    public function testEventWithLocation()
-    {
+    public function testEventWithLocation() {
         $geographicalPosition = new GeographicPosition(51.333333333333, 7.05);
         $location = (new Location('Location Name', 'Somewhere'))->withGeographicPosition($geographicalPosition);
         $event = (new Event())->setLocation($location);
@@ -100,8 +95,7 @@ class CalendarFactoryTest extends TestCase
         );
     }
 
-    public function testSingleDayEvent()
-    {
+    public function testSingleDayEvent() {
         $event = (new Event())->setOccurrence(new SingleDay(new Date(DateTimeImmutable::createFromFormat('Y-m-d', '2030-12-24'))));
 
         self::assertEventRendersCorrect($event, [
@@ -109,8 +103,7 @@ class CalendarFactoryTest extends TestCase
         ]);
     }
 
-    public function testMultiDayEvent()
-    {
+    public function testMultiDayEvent() {
         $firstDay = new Date(DateTimeImmutable::createFromFormat('Y-m-d', '2030-12-24'));
         $lastDay = new Date(DateTimeImmutable::createFromFormat('Y-m-d', '2030-12-26'));
         $occurrence = new MultiDay($firstDay, $lastDay);
@@ -122,8 +115,7 @@ class CalendarFactoryTest extends TestCase
         ]);
     }
 
-    public function testTimespanEvent()
-    {
+    public function testTimespanEvent() {
         $begin = new DateTime(DateTimeImmutable::createFromFormat('Y-m-d H:i', '2030-12-24 12:15'), false);
         $end = new DateTime(DateTimeImmutable::createFromFormat('Y-m-d H:i', '2030-12-24 13:45'), false);
         $occurrence = new TimeSpan($begin, $end);
@@ -135,13 +127,13 @@ class CalendarFactoryTest extends TestCase
         ]);
     }
 
-    public function testUrlAttachments()
-    {
+    public function testUrlAttachments() {
         $event = (new Event())
             ->addAttachment(
                 new Attachment(
                     new Uri('http://example.com/document.txt'),
-                    'text/plain')
+                    'text/plain'
+                )
             );
 
         self::assertEventRendersCorrect($event, [
@@ -149,8 +141,7 @@ class CalendarFactoryTest extends TestCase
         ]);
     }
 
-    public function testFileAttachments()
-    {
+    public function testFileAttachments() {
         $event = (new Event())
             ->addAttachment(
                 new Attachment(
@@ -164,8 +155,7 @@ class CalendarFactoryTest extends TestCase
         ]);
     }
 
-    public function testOrganizer()
-    {
+    public function testOrganizer() {
         $event = (new Event())
             ->setOrganizer(new Organizer(
                 new EmailAddress('test@example.com'),
@@ -180,8 +170,7 @@ class CalendarFactoryTest extends TestCase
         ]);
     }
 
-    public function testStatus()
-    {
+    public function testStatus() {
         $event = (new Event())
             ->setStatus(Status::CONFIRMED());
 
@@ -190,8 +179,7 @@ class CalendarFactoryTest extends TestCase
         ]);
     }
 
-    public function testMethod()
-    {
+    public function testMethod() {
         $event = (new Event())
             ->setMethod(Method::PUBLISH());
 
@@ -200,8 +188,7 @@ class CalendarFactoryTest extends TestCase
         ]);
     }
 
-    public function testAltDesc()
-    {
+    public function testAltDesc() {
         $event = (new Event())
             ->setAltDesc('<html><body><a href="http://bing.com">Bing</a></body></html>');
 
@@ -211,8 +198,17 @@ class CalendarFactoryTest extends TestCase
         ]);
     }
 
-    private static function assertEventRendersCorrect(Event $event, array $expected)
-    {
+
+    public function testEventUrl() {
+        $event = (new Event())
+            ->setUrl(new Uri('https://example.org/calendarevent'));
+
+        self::assertEventRendersCorrect($event, [
+            'URL:https://example.org/calendarevent',
+        ]);
+    }
+
+    private static function assertEventRendersCorrect(Event $event, array $expected) {
         $resultAsString = (string) (new EventFactory())->createComponent($event);
 
         $resultAsArray = explode(ContentLine::LINE_SEPARATOR, $resultAsString);
