@@ -1,3 +1,12 @@
+### Modifiche integrate rispetto alla libreria di base
+- [x] Attendee (versione parziale)
+- [ ] Status and method del calendargit fetch origin
+- [ ] Status and method dell'event
+- [ ] Calendar id name description
+
+---
+
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
