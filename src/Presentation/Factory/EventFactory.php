@@ -37,12 +37,14 @@ use Generator;
 /**
  * @SuppressWarnings("CouplingBetweenObjects")
  */
-class EventFactory {
+class EventFactory
+{
     private AlarmFactory $alarmFactory;
 
     private DateTimeFactory $dateTimeFactory;
 
-    public function __construct(?AlarmFactory $alarmFactory = null, ?DateTimeFactory $dateTimeFactory = null) {
+    public function __construct(?AlarmFactory $alarmFactory = null, ?DateTimeFactory $dateTimeFactory = null)
+    {
         $this->alarmFactory = $alarmFactory ?? new AlarmFactory();
         $this->dateTimeFactory = $dateTimeFactory ?? new DateTimeFactory();
     }
@@ -50,13 +52,15 @@ class EventFactory {
     /**
      * @return Generator<Component>
      */
-    final public function createComponents(Events $events): Generator {
+    final public function createComponents(Events $events): Generator
+    {
         foreach ($events as $event) {
             yield $this->createComponent($event);
         }
     }
 
-    public function createComponent(Event $event): Component {
+    public function createComponent(Event $event): Component
+    {
         return new Component(
             'VEVENT',
             iterator_to_array($this->getProperties($event), false),
@@ -69,7 +73,8 @@ class EventFactory {
      * @SuppressWarnings("PHPMD.NPathComplexity")
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
-    protected function getProperties(Event $event): Generator {
+    protected function getProperties(Event $event): Generator
+    {
         yield new Property('UID', new TextValue((string) $event->getUniqueIdentifier()));
         yield new Property('DTSTAMP', new DateTimeValue($event->getTouchedAt()));
 
@@ -121,7 +126,8 @@ class EventFactory {
     /**
      * @return Generator<Component>
      */
-    protected function getComponents(Event $event): Generator {
+    protected function getComponents(Event $event): Generator
+    {
         yield from array_map(
             fn (Alarm $alarm) => $this->alarmFactory->createComponent($alarm),
             $event->getAlarms()
@@ -131,7 +137,8 @@ class EventFactory {
     /**
      * @return Generator<Property>
      */
-    private function getOccurrenceProperties(Occurrence $occurrence): Generator {
+    private function getOccurrenceProperties(Occurrence $occurrence): Generator
+    {
         if ($occurrence instanceof SingleDay) {
             yield new Property('DTSTART', new DateValue($occurrence->getDate()));
         }
@@ -150,7 +157,8 @@ class EventFactory {
     /**
      * @return Generator<Property>
      */
-    private function getLocationProperties(Event $event): Generator {
+    private function getLocationProperties(Event $event): Generator
+    {
         yield new Property('LOCATION', new TextValue((string) $event->getLocation()));
 
         if ($event->getLocation()->hasGeographicalPosition()) {
@@ -171,7 +179,8 @@ class EventFactory {
     /**
      * @return Generator<Property>
      */
-    private function getAttachmentProperties(Attachment $attachment): Generator {
+    private function getAttachmentProperties(Attachment $attachment): Generator
+    {
         $parameters = [];
 
         if ($attachment->hasMimeType()) {
@@ -198,7 +207,8 @@ class EventFactory {
         }
     }
 
-    private function getOrganizerProperty(Organizer $organizer): Property {
+    private function getOrganizerProperty(Organizer $organizer): Property
+    {
         $parameters = [];
 
         if ($organizer->hasDisplayName()) {
@@ -216,7 +226,8 @@ class EventFactory {
         return new Property('ORGANIZER', new UriValue($organizer->getEmailAddress()->toUri()), $parameters);
     }
 
-    private function getAltDescProperty(string $altDesc): Property {
+    private function getAltDescProperty(string $altDesc): Property
+    {
         return new Property(
             'X-ALT-DESC',
             new TextValue($altDesc),
